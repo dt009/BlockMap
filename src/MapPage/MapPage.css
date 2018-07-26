@@ -1,0 +1,17 @@
+
+/**
+ * @author duantao
+ * @file 地图
+ * @date 2018/7/26
+ */
+
+.map-box {
+  height: 500px;
+  width: 500px;
+  background: #f00;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+}
