@@ -1,0 +1,85 @@
+
+/**
+ * @author duantao
+ * @file 样式
+ * @date 2018/7/27
+ */
+
+.filter-place-page {
+    z-index: 1000;
+    background: #fff;
+    width: 300px;
+    background: #f3f5f7;
+}
+
+.filter-place-page header {
+    height: 40px;
+    line-height: 40px;
+    background: #6aadff;
+    color: #333;
+    font-size: 16px;
+    text-align: center;
+    padding-right: 30px;
+}
+
+.filter-place-page header h2 {
+    font-size: 16px;
+    position: relative;
+}
+
+header h2 img {
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    top: 5px;
+    right: -20px;
+}
+
+section .input-box {
+    height: 31px;
+    line-height: 30px;
+    display: flex;
+    background: #f2f2f2;
+    border-bottom: 1px solid #eee;
+    padding-left: 10px;
+}
+
+.input-box .input-address {
+    flex: 1;
+    border: 0;
+    height: 30px;
+    padding-left: 10px;
+    font-size: 14px;
+}
+
+input:focus {
+    outline: none;
+}
+
+.input-box .filter-btn {
+    cursor: pointer;
+    margin-right: 10px;
+    width: 60px;
+    height: 100%;
+    border: 0;
+    background: antiquewhite;
+    color: #6aadff;
+    outline-width: 0;
+}
+
+
+.address-list {
+    background: #f3f5f7;
+}
+
+.address-list div {
+    height: 40px;
+    border-bottom: 1px solid #ccc;
+    padding-left: 10px;
+    line-height: 40px;
+    font-size: 14px;
+}
+
+
+
+

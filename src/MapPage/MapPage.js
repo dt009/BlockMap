@@ -21,18 +21,19 @@ class MapPage extends Component {
                     lng: 116.39748,
                 },
                 zoom: 13,
+                mapTypeControl: false,
             },
             defaultMarkerListData: [
                 // 天安门
-                {title: '天安门', code: 'tiananmen', location: {lat: 39.90872, lng: 116.39748}},
+                {title: '天安门', code: 'tiananmen', count: 0, location: {lat: 39.90872, lng: 116.39748}},
                 // 故宫
-                {title: '故宫', code: 'gugong', location: {lat: 39.916345, lng: 116.397155}},
+                {title: '故宫', code: 'gugong', count: 1, location: {lat: 39.916345, lng: 116.397155}},
                 // 颐和园
-                {title: '颐和园', code: 'yiheyuan', location: {lat: 39.999982, lng: 116.275461}},
+                {title: '颐和园', code: 'yiheyuan', count: 2, location: {lat: 39.999982, lng: 116.275461}},
                 // 圆明园
-                {title: '圆明园', code: 'yuanmingyuan', location: {lat: 40.008098, lng: 116.298215}},
+                {title: '圆明园', code: 'yuanmingyuan', count: 3, location: {lat: 40.008098, lng: 116.298215}},
                 // 北京理工大学
-                {title: '北京理工大学', code: 'beijingligongdaxue', location: {lat: 39.964431, lng: 116.310319}},
+                {title: '北京理工大学', code: 'beijingligongdaxue', count: 4, location: {lat: 39.964431, lng: 116.310319}},
             ],
             map: null,
             markerList: [],
@@ -51,6 +52,7 @@ class MapPage extends Component {
         return map
     };
     
+    // 设置标记图标
     setMarkerIcon = color => {
         return new window.google.maps.MarkerImage(
             'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + color +
@@ -67,21 +69,49 @@ class MapPage extends Component {
         let {defaultMarkerListData} = this.state;
         
         let markerList = [];
-        
-        let defaultIcon = this.setMarkerIcon('0091ff');
+    
         let highlightedIcon = this.setMarkerIcon('ffff24');
+        
+        
+        function icon(count) {
+            let defaultIcon = null;
+            switch (count) {
+                case 0:
+                    defaultIcon = that.setMarkerIcon('ff0000');
+                    break;
+    
+                case 1:
+                    defaultIcon = that.setMarkerIcon('ff00ff');
+                    break;
+    
+                case 2:
+                    defaultIcon = that.setMarkerIcon('ffffff');
+                    break;
+    
+                case 3:
+                    defaultIcon = that.setMarkerIcon('000000');
+                    break;
+                    
+                default:
+                    defaultIcon = that.setMarkerIcon('0000ff');
+                    
+            }
+            
+            return defaultIcon;
+        }
         
         defaultMarkerListData.forEach((markerData, key) => {
             
-            let {title, location, code} = markerData;
+            let {title, location, code, count} = markerData;
             let marker = new window.google.maps.Marker({
                 position: location,
                 title,
                 animation: window.google.maps.Animation.DAOP,
                 id: key,
-                icon: defaultIcon
+                icon: icon(count)
             });
             marker.code = code;
+            marker.count = count;
             
             marker.addListener('click', function () {
                 that.setInfoWindow(this);
@@ -92,7 +122,7 @@ class MapPage extends Component {
             });
             
             marker.addListener('mouseout', function () {
-                this.setIcon(defaultIcon)
+                this.setIcon(icon(this.count))
             });
             
             markerList.push(marker);
@@ -106,12 +136,14 @@ class MapPage extends Component {
         
     };
     
+    // 设置 infoWindow 框的信息
     setInfoWindow = marker => {
         
         let {largeInfoWindow, map} = this.state;
         
         if (largeInfoWindow.marker !== marker) {
-            largeInfoWindow.setContent('');
+            
+            largeInfoWindow.setContent('数据请求中...');
             largeInfoWindow.marker = marker;
             
             
@@ -121,19 +153,27 @@ class MapPage extends Component {
                     
                     let {status, result} = res;
                     
-                    let contentString = `<div style="width: 300px;">
-                                            <div class="title">景点名称: ${result.name}</div>
-                                            <div class="location">
-                                                <p>坐标: lat: ${result.location.lat};</p>
-                                                <p style="text-indent: 32px">  lng: ${result.location.lng}</p>
-                                            </div>
-                                            <div class="url">URL: <a href="${result.url}">${result.url}</a></div>
-                                            <div class="description">简介: ${result.abstract}</div>
-                                        </div>`;
+                    if (status === 'Success') {
+                        let contentString = `<div style="width: 300px;">
+                                                <div class="title">景点名称: ${result.name}</div>
+                                                <div class="location">
+                                                    <p>坐标: lat: ${result.location.lat};</p>
+                                                    <p style="text-indent: 32px">  lng: ${result.location.lng}</p>
+                                                </div>
+                                                <div class="url">URL: <a href="${result.url}">${result.url}</a></div>
+                                                <div class="description">简介: ${result.abstract}</div>
+                                            </div>`;
     
-                    largeInfoWindow.setContent(contentString);
-                
+                        largeInfoWindow.setContent(contentString);
+                    }
+                    else {
+                        largeInfoWindow.setContent('请求失败...');
+                    }
+                    
                 });
+            
+            map.setCenter(marker.position);
+            map.setZoom(14);
             
             largeInfoWindow.open(map, marker);
             largeInfoWindow.addListener('closeclick', function () {
@@ -182,8 +222,6 @@ class MapPage extends Component {
         return (
             <div className='map-box'>
                 <div id='map' ref='map'></div>
-                <div id='message'></div>
-                
             </div>
         )
     }
