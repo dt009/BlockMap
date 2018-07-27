@@ -221,7 +221,7 @@ class MapPage extends Component {
     render() {
         return (
             <div className='map-box'>
-                <div id='map' ref='map'></div>
+                <div role='application' id='map' ref='map'></div>
             </div>
         )
     }

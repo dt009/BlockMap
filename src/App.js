@@ -48,7 +48,7 @@ class App extends Component {
         return (
             <div className="App">
                 <h1>常去景点图</h1>
-                <div className='main'>
+                <main className='main'>
                     <FilterPlacePage
                         dataList={allPlaceDataList}
                         getFilterList={this.getMarkerDataList}
@@ -56,7 +56,7 @@ class App extends Component {
                     <MapPage
                         markerList={markerDataList}
                     />
-                </div>
+                </main>
             </div>
         );
     }

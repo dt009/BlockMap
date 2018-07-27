@@ -87,9 +87,13 @@ class FilterPlacePage extends Component {
                 </header>
                 <section>
                     <div className='input-box'>
-                        <input style={{display: 'none'}} className='input-address' type="text" placeholder='请输入地址'/>
                         <div className='input-address'>
-                            <select onChange={e => this.getSelectedValue(e.target.value)} name="address" id="select-address">
+                            <select
+                                onChange={e => this.getSelectedValue(e.target.value)}
+                                name="address"
+                                id="select-address"
+                                aria-label="the Number of"
+                            >
                                 <option value="">全部</option>
                                 <option value="0">没有去过</option>
                                 <option value="1">去过一次</option>
@@ -98,7 +102,10 @@ class FilterPlacePage extends Component {
                                 <option value="other">去过三次以上</option>
                             </select>
                         </div>
-                        <button className='filter-btn' onClick={this.handleClickFilterBtn}>确认过滤</button>
+                        <button
+                            className='filter-btn'
+                            onClick={this.handleClickFilterBtn}
+                        >确认过滤</button>
                     </div>
                     <div className='address-list'>
                         {this.renderAddressListDon()}
