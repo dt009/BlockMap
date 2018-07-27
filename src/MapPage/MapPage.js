@@ -73,7 +73,7 @@ class MapPage extends Component {
         
         defaultMarkerListData.forEach((markerData, key) => {
             
-            let {title, location} = markerData;
+            let {title, location, code} = markerData;
             let marker = new window.google.maps.Marker({
                 position: location,
                 title,
@@ -81,6 +81,7 @@ class MapPage extends Component {
                 id: key,
                 icon: defaultIcon
             });
+            marker.code = code;
             
             marker.addListener('click', function () {
                 that.setInfoWindow(this);
@@ -110,9 +111,30 @@ class MapPage extends Component {
         let {largeInfoWindow, map} = this.state;
         
         if (largeInfoWindow.marker !== marker) {
-            
-            largeInfoWindow.setContent(marker.title);
+            largeInfoWindow.setContent('');
             largeInfoWindow.marker = marker;
+            
+            
+            this.getPlace(marker.code)
+                .then(res => {
+                    console.log('data => ', res)
+                    
+                    let {status, result} = res;
+                    
+                    let contentString = `<div style="width: 300px;">
+                                            <div class="title">景点名称: ${result.name}</div>
+                                            <div class="location">
+                                                <p>坐标: lat: ${result.location.lat};</p>
+                                                <p style="text-indent: 32px">  lng: ${result.location.lng}</p>
+                                            </div>
+                                            <div class="url">URL: <a href="${result.url}">${result.url}</a></div>
+                                            <div class="description">简介: ${result.abstract}</div>
+                                        </div>`;
+    
+                    largeInfoWindow.setContent(contentString);
+                
+                });
+            
             largeInfoWindow.open(map, marker);
             largeInfoWindow.addListener('closeclick', function () {
                 largeInfoWindow.marker = null;
@@ -140,12 +162,10 @@ class MapPage extends Component {
     };
     
     getPlace = address => {
-        window.$.ajax({
+       return  window.$.ajax({
             url: `http://api.map.baidu.com/telematics/v3/travel_attractions?id=${address}&ak=8RgzSljDxpVDNe1Bal9Sz2VpAK0zcIcL&output=json`,
             type: "GET",
             dataType: "jsonp",
-        }).then(res => {
-            console.log('data ===>>> ', res)
         });
     };
     
@@ -156,8 +176,6 @@ class MapPage extends Component {
         
         this.setMarkerInMap(markerList, map);
         
-        this.getPlace('beijingligongdaxue')
-        
     }
     
     render() {
@@ -165,6 +183,7 @@ class MapPage extends Component {
             <div className='map-box'>
                 <div id='map' ref='map'></div>
                 <div id='message'></div>
+                
             </div>
         )
     }
