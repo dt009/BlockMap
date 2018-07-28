@@ -5,10 +5,32 @@
  * @date 2018/7/27
  */
 
+
+aside {
+    transition: width 1s;
+}
+
+
+@media screen and (max-width: 800px) {
+    aside {
+        position: fixed !important;
+        width: 2rem !important;
+    }
+}
 .filter-place-page {
     z-index: 1000;
-    width: 3rem;
     background: #f3f5f7;
+    width: 3rem;
+}
+
+.hide-box {
+    width: 0 !important;
+}
+
+.filter-place-page .show {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
 }
 
 .filter-place-page header {
@@ -34,6 +56,21 @@ header h2 img {
     right: -0.2rem;
 }
 
+.hide {
+    height: .4rem;
+    width: .4rem;
+    position: fixed;
+    top: .4rem;
+    background: #f00;
+    display: none;
+}
+
+.hide img {
+    height: .3rem;
+    width: .3rem;
+    margin: 0.05rem 0.05rem;
+}
+
 section .input-box {
     height: .31rem;
     line-height: .3rem;
@@ -41,6 +78,7 @@ section .input-box {
     background: #f2f2f2;
     border-bottom: 0.01rem solid #eee;
     padding-left: .1rem;
+
 }
 
 .input-box .input-address {
@@ -48,10 +86,13 @@ section .input-box {
     border: 0;
     height: .3rem;
     padding-left: .1rem;
-    font-size: .14rem;
 }
 
-input:focus {
+.input-address #select-address {
+    font-size: .12rem;
+}
+
+.input-address #select-address:focus {
     outline: none;
 }
 
@@ -64,8 +105,8 @@ input:focus {
     background: antiquewhite;
     color: #6aadff;
     outline-width: 0;
+    font-size: .12rem;
 }
-
 
 .address-list {
     background: #f3f5f7;

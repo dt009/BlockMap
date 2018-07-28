@@ -147,14 +147,14 @@ class MapPage extends Component {
                     let {status, result} = res;
 
                     if (status === 'Success') {
-                        let contentString = `<div style="width: 300px;">
+                        let contentString = `<div style="width: 3rem; font-size: 0.14rem">
                                                 <div class="title">景点名称: ${result.name}</div>
                                                 <div class="location">
                                                     <p>坐标: lat: ${result.location.lat};</p>
-                                                    <p style="text-indent: 32px">  lng: ${result.location.lng}</p>
+                                                    <p style="text-indent: 0.32rem">  lng: ${result.location.lng}</p>
                                                 </div>
                                                 <div class="url">URL: <a href="${result.url}">${result.url}</a></div>
-                                                <div class="description">简介: ${result.abstract}</div>
+                                                <div class="description" style="white-space: normal">简介: ${result.abstract}</div>
                                             </div>`;
 
                         largeInfoWindow.setContent(contentString);
