@@ -8,7 +8,7 @@ import React, {Component} from 'react';
 import './MapPage.css';
 // import $ from 'jquery';
 
-
+let showMarkerList = [];
 
 class MapPage extends Component {
     
@@ -32,18 +32,18 @@ class MapPage extends Component {
     
     // 初始化地图
     initMap = () => {
-        
         let map = new window.google.maps.Map(this.refs.map, this.state.defaultMapSetting);
-        this.setState({map});
-        return map
+        window.map = map;
     };
     
     // 获取标记的数据
     getMarkerDataList = value => {
-        console.log('value ===>>> ', value);
-        this.getMarkerList(value)
+        
+        let markerList = this.getMarkerList(value, window.map);
+        
+        this.setMarkerInMap(markerList);
     };
-    
+
     // 设置标记图标
     setMarkerIcon = color => {
         return new window.google.maps.MarkerImage(
@@ -54,47 +54,52 @@ class MapPage extends Component {
             new window.google.maps.Point(10, 34),
             new window.google.maps.Size(21, 34));
     };
-    
+
     // 获取标记列表
-    getMarkerList = markerDataList => {
+    getMarkerList = (markerDataList, map) => {
         
+        if (showMarkerList.length > 0) {
+            showMarkerList.forEach(item => item.setMap(null));
+            showMarkerList = [];
+        }
+
         let that = this;
-        
+
         let markerList = [];
-    
+
         let highlightedIcon = this.setMarkerIcon('ffff24');
-        
-        
+
+
         function icon(count) {
             let defaultIcon = null;
             switch (count) {
                 case 0:
                     defaultIcon = that.setMarkerIcon('ff0000');
                     break;
-    
+
                 case 1:
                     defaultIcon = that.setMarkerIcon('ff00ff');
                     break;
-    
+
                 case 2:
                     defaultIcon = that.setMarkerIcon('ffffff');
                     break;
-    
+
                 case 3:
                     defaultIcon = that.setMarkerIcon('000000');
                     break;
-                    
+
                 default:
                     defaultIcon = that.setMarkerIcon('0000ff');
-                    
+
             }
-            
+
             return defaultIcon;
         }
-        
-    
+
+
         markerDataList.forEach((markerData, key) => {
-            
+
             let {title, location, code, count} = markerData;
             let marker = new window.google.maps.Marker({
                 position: location,
@@ -105,42 +110,42 @@ class MapPage extends Component {
             });
             marker.code = code;
             marker.count = count;
-            
+
             marker.addListener('click', function () {
-                that.setInfoWindow(this);
+                that.setInfoWindow(marker, map);
             });
-            
+
             marker.addListener('mouseover', function () {
                 this.setIcon(highlightedIcon)
             });
-            
+
             marker.addListener('mouseout', function () {
                 this.setIcon(icon(this.count))
             });
-            
+
             markerList.push(marker);
         });
         
-        this.setMarkerInMap(markerList);
+        showMarkerList = markerList;
+        return markerList;
+
     };
-    
+
     // 设置 infoWindow 框的信息
-    setInfoWindow = marker => {
-        
-        let {largeInfoWindow, map} = this.state;
-        
+    setInfoWindow = (marker, map) => {
+
+        let {largeInfoWindow} = this.state;
+
         if (largeInfoWindow.marker !== marker) {
-            
+
             largeInfoWindow.setContent('数据请求中...');
             largeInfoWindow.marker = marker;
-            
-            
+
+
             this.getPlace(marker.code)
                 .then(res => {
-                    console.log('data => ', res)
-                    
                     let {status, result} = res;
-                    
+
                     if (status === 'Success') {
                         let contentString = `<div style="width: 300px;">
                                                 <div class="title">景点名称: ${result.name}</div>
@@ -151,44 +156,55 @@ class MapPage extends Component {
                                                 <div class="url">URL: <a href="${result.url}">${result.url}</a></div>
                                                 <div class="description">简介: ${result.abstract}</div>
                                             </div>`;
-    
+
                         largeInfoWindow.setContent(contentString);
                     }
                     else {
                         largeInfoWindow.setContent('请求失败...');
                     }
-                    
+
+                }, e => {
+                    largeInfoWindow.setContent('请求出错...');
                 });
-            
+
             map.setCenter(marker.position);
             map.setZoom(14);
-            
+
             largeInfoWindow.open(map, marker);
             largeInfoWindow.addListener('closeclick', function () {
                 largeInfoWindow.marker = null;
             })
-            
-            
         }
     };
-    
+
     // 设置标记在地图上
-    setMarkerInMap = markerList => {
-        
-        let {bounds, map} = this.state;
-    
-        console.log('markerList =====>>> ', markerList);
-        
+    setMarkerInMap = (markerList, show = true) => {
+
+        let {bounds} = this.state;
+
+        let map = window.map;
+
         if (map) {
-            markerList.forEach(marker => {
-                marker.setMap(map);
-                bounds.extend(marker.position);
-                map.fitBounds(bounds);
-            });
-            
+            if (show) {
+                markerList.forEach(marker => {
+                    marker.setMap(map);
+                    bounds.extend(marker.position);
+                    map.fitBounds(bounds);
+                });
+                
+                if (markerList.length === 1) {
+                    map.setCenter(markerList[0].position);
+                    map.setZoom(14);
+                }
+            }
+            else {
+                markerList.forEach(marker => {
+                    marker.setMap(null);
+                });
+            }
         }
     };
-    
+
     // 第三方 API 接口
     getPlace = address => {
        return  window.$.ajax({
@@ -199,7 +215,14 @@ class MapPage extends Component {
     };
     
     componentDidMount() {
+        
+        let {defaultDataList} = this.props;
+        
         this.initMap();
+    
+        let markerList = this.getMarkerList(defaultDataList, window.map);
+    
+        this.setMarkerInMap(markerList);
     }
     
     render() {
