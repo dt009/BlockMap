@@ -7,49 +7,48 @@
 
 .filter-place-page {
     z-index: 1000;
-    background: #fff;
-    width: 300px;
+    width: 3rem;
     background: #f3f5f7;
 }
 
 .filter-place-page header {
-    height: 40px;
-    line-height: 40px;
+    height: .4rem;
+    line-height: .4rem;
     background: #6aadff;
     color: #333;
-    font-size: 16px;
+    font-size: .16rem;
     text-align: center;
-    padding-right: 30px;
+    padding-right: .3rem;
 }
 
 .filter-place-page header h2 {
-    font-size: 16px;
+    font-size: .16rem;
     position: relative;
 }
 
 header h2 img {
     position: absolute;
-    height: 30px;
-    width: 30px;
-    top: 5px;
-    right: -20px;
+    height: .3rem;
+    width: .3rem;
+    top: .05rem;
+    right: -0.2rem;
 }
 
 section .input-box {
-    height: 31px;
-    line-height: 30px;
+    height: .31rem;
+    line-height: .3rem;
     display: flex;
     background: #f2f2f2;
-    border-bottom: 1px solid #eee;
-    padding-left: 10px;
+    border-bottom: 0.01rem solid #eee;
+    padding-left: .1rem;
 }
 
 .input-box .input-address {
     flex: 1;
     border: 0;
-    height: 30px;
-    padding-left: 10px;
-    font-size: 14px;
+    height: .3rem;
+    padding-left: .1rem;
+    font-size: .14rem;
 }
 
 input:focus {
@@ -58,8 +57,8 @@ input:focus {
 
 .input-box .filter-btn {
     cursor: pointer;
-    margin-right: 10px;
-    width: 60px;
+    margin-right: .1rem;
+    width: .6rem;
     height: 100%;
     border: 0;
     background: antiquewhite;
@@ -73,11 +72,11 @@ input:focus {
 }
 
 .address-list div {
-    height: 40px;
-    border-bottom: 1px solid #ccc;
-    padding-left: 10px;
-    line-height: 40px;
-    font-size: 14px;
+    height: .4rem;
+    border-bottom: .01rem solid #ccc;
+    padding-left: .1rem;
+    line-height: .4rem;
+    font-size: .14rem;
 }
 
 

@@ -6,12 +6,12 @@
 }
 
 .App h1 {
-    height: 40px;
+    height: .4rem;
     background: #212121;
     color: #fff;
-    line-height: 40px;
-    font-size: 18px;
-    letter-spacing: 5px;
+    line-height: .4rem;
+    font-size: .18rem;
+    letter-spacing: .05rem;
     text-align: center;
 }
 
