@@ -26,14 +26,25 @@ class FilterPlacePage extends Component {
     componentDidMount() {
         let {dataList, getFilterList} = this.props;
         
+        console.log('datalist ===>> ', this.props);
         getFilterList(dataList);
         this.setState({
             placeList: dataList
         })
     }
     
+    // 获取展示的地点列表
+    getPlaceList = value => {
+        console.log('value ===>>> ', value);
+        // this.setState({
+        //     placeList: value
+        // })
+    };
+    
     // 渲染展示的地点
     renderAddressListDon = () => {
+        
+        console.log('placeList ===>> ', this.state.placeList);
         
         return this.state.placeList.map((item, index) => {
             return (

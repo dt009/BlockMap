@@ -23,18 +23,6 @@ class MapPage extends Component {
                 zoom: 13,
                 mapTypeControl: false,
             },
-            defaultMarkerListData: [
-                // 天安门
-                {title: '天安门', code: 'tiananmen', count: 0, location: {lat: 39.90872, lng: 116.39748}},
-                // 故宫
-                {title: '故宫', code: 'gugong', count: 1, location: {lat: 39.916345, lng: 116.397155}},
-                // 颐和园
-                {title: '颐和园', code: 'yiheyuan', count: 2, location: {lat: 39.999982, lng: 116.275461}},
-                // 圆明园
-                {title: '圆明园', code: 'yuanmingyuan', count: 3, location: {lat: 40.008098, lng: 116.298215}},
-                // 北京理工大学
-                {title: '北京理工大学', code: 'beijingligongdaxue', count: 4, location: {lat: 39.964431, lng: 116.310319}},
-            ],
             map: null,
             markerList: [],
             largeInfoWindow: new window.google.maps.InfoWindow(),
@@ -46,10 +34,14 @@ class MapPage extends Component {
     initMap = () => {
         
         let map = new window.google.maps.Map(this.refs.map, this.state.defaultMapSetting);
-        
         this.setState({map});
-        
         return map
+    };
+    
+    // 获取标记的数据
+    getMarkerDataList = value => {
+        console.log('value ===>>> ', value);
+        this.getMarkerList(value)
     };
     
     // 设置标记图标
@@ -64,9 +56,9 @@ class MapPage extends Component {
     };
     
     // 获取标记列表
-    getMarkerList = () => {
+    getMarkerList = markerDataList => {
+        
         let that = this;
-        let {defaultMarkerListData} = this.state;
         
         let markerList = [];
     
@@ -100,7 +92,8 @@ class MapPage extends Component {
             return defaultIcon;
         }
         
-        defaultMarkerListData.forEach((markerData, key) => {
+    
+        markerDataList.forEach((markerData, key) => {
             
             let {title, location, code, count} = markerData;
             let marker = new window.google.maps.Marker({
@@ -128,12 +121,7 @@ class MapPage extends Component {
             markerList.push(marker);
         });
         
-        this.setState({
-            markerList
-        });
-        
-        return markerList;
-        
+        this.setMarkerInMap(markerList);
     };
     
     // 设置 infoWindow 框的信息
@@ -185,22 +173,23 @@ class MapPage extends Component {
     };
     
     // 设置标记在地图上
-    setMarkerInMap = (markerList, map, show = true) => {
+    setMarkerInMap = markerList => {
         
-        let {bounds} = this.state;
+        let {bounds, map} = this.state;
+    
+        console.log('markerList =====>>> ', markerList);
         
-        if (show) {
+        if (map) {
             markerList.forEach(marker => {
                 marker.setMap(map);
                 bounds.extend(marker.position);
                 map.fitBounds(bounds);
-            })
-        }
-        else {
-            markerList.forEach(marker => marker.setMap(null))
+            });
+            
         }
     };
     
+    // 第三方 API 接口
     getPlace = address => {
        return  window.$.ajax({
             url: `http://api.map.baidu.com/telematics/v3/travel_attractions?id=${address}&ak=8RgzSljDxpVDNe1Bal9Sz2VpAK0zcIcL&output=json`,
@@ -209,13 +198,8 @@ class MapPage extends Component {
         });
     };
     
-    
     componentDidMount() {
-        let map = this.initMap();
-        let markerList = this.getMarkerList();
-        
-        this.setMarkerInMap(markerList, map);
-        
+        this.initMap();
     }
     
     render() {
