@@ -35,7 +35,12 @@ class FilterPlacePage extends Component {
         
         return this.state.placeList.map((item, index) => {
             return (
-                <div key={index}>{item.title}</div>
+                <div
+                    tabIndex='0'
+                    key={index}
+                    onClick={e => this.getClickPlaceId(item.id, e)}
+                    onKeyUp={e => this.getClickPlaceId(item.id, e)}
+                >{item.title}</div>
             )
         })
     };
@@ -81,6 +86,21 @@ class FilterPlacePage extends Component {
         })
     };
     
+    // 获取点击地点的 id
+    getClickPlaceId = (id, event) => {
+        let {getPlaceId} = this.props;
+        
+        let {key, type} = event;
+        if (type === 'click') {
+            getPlaceId(id);
+        }
+        else {
+            if (key && key === 'Enter') {
+                getPlaceId(id);
+            }
+        }
+    };
+    
     render() {
         
         let {icon, isPageShow} = this.state;
@@ -105,6 +125,7 @@ class FilterPlacePage extends Component {
                         <div className='input-box'>
                             <div className='input-address'>
                                 <select
+                                    tabIndex='0'
                                     onChange={e => this.getSelectedValue(e.target.value)}
                                     name="address"
                                     id="select-address"
@@ -119,6 +140,7 @@ class FilterPlacePage extends Component {
                                 </select>
                             </div>
                             <button
+                                tabIndex='0'
                                 className='filter-btn'
                                 onClick={this.handleClickFilterBtn}
                             >确认过滤</button>

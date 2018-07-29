@@ -100,12 +100,12 @@ class MapPage extends Component {
 
         markerDataList.forEach((markerData, key) => {
 
-            let {title, location, code, count} = markerData;
+            let {title, location, code, count, id} = markerData;
             let marker = new window.google.maps.Marker({
                 position: location,
                 title,
                 animation: window.google.maps.Animation.DAOP,
-                id: key,
+                id,
                 icon: icon(count)
             });
             marker.code = code;
@@ -135,41 +135,41 @@ class MapPage extends Component {
     setInfoWindow = (marker, map) => {
 
         let {largeInfoWindow} = this.state;
-
-        if (largeInfoWindow.marker !== marker) {
-
+        
+        if (largeInfoWindow.marker != marker) {
+            
             largeInfoWindow.setContent('数据请求中...');
             largeInfoWindow.marker = marker;
-
-
+    
+    
             this.getPlace(marker.code)
                 .then(res => {
                     let {status, result} = res;
-
+            
                     if (status === 'Success') {
-                        let contentString = `<div style="width: 3rem; font-size: 0.14rem">
-                                                <div class="title">景点名称: ${result.name}</div>
-                                                <div class="location">
-                                                    <p>坐标: lat: ${result.location.lat};</p>
-                                                    <p style="text-indent: 0.32rem">  lng: ${result.location.lng}</p>
-                                                </div>
-                                                <div class="url">URL: <a href="${result.url}">${result.url}</a></div>
-                                                <div class="description" style="white-space: normal">简介: ${result.abstract}</div>
-                                            </div>`;
-
+                        let contentString = `<div style="width: 3rem; font-size: 0.14rem">`
+                            + `<div class="title">景点名称: ${result.name}</div>`
+                            + `<div class="location">`
+                            + `<p>坐标: lat: ${result.location.lat};</p>`
+                            + `<p style="text-indent: 0.32rem">  lng: ${result.location.lng}</p>`
+                            + `</div>`
+                            + `<div class="url">URL: <a href="${result.url}">${result.url}</a></div>`
+                            + `<div class="description" style="white-space: normal">简介: ${result.abstract}</div>`
+                            + `</div>`;
+                
                         largeInfoWindow.setContent(contentString);
                     }
                     else {
                         largeInfoWindow.setContent('请求失败...');
                     }
-
+            
                 }, e => {
                     largeInfoWindow.setContent('请求出错...');
                 });
-
+    
             map.setCenter(marker.position);
             map.setZoom(14);
-
+    
             largeInfoWindow.open(map, marker);
             largeInfoWindow.addListener('closeclick', function () {
                 largeInfoWindow.marker = null;
@@ -213,6 +213,17 @@ class MapPage extends Component {
             dataType: "jsonp",
         });
     };
+    
+    // 点击列表中特定的地点
+    handleSetOneMarkerInMap = id => {
+        
+        showMarkerList.forEach(item => {
+            if (item.id === id) {
+                window.google.maps.event.trigger(item, 'click', {});
+            }
+        })
+    };
+    
     
     componentDidMount() {
         

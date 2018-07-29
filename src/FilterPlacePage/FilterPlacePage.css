@@ -92,9 +92,6 @@ section .input-box {
     font-size: .12rem;
 }
 
-.input-address #select-address:focus {
-    outline: none;
-}
 
 .input-box .filter-btn {
     cursor: pointer;
@@ -106,6 +103,9 @@ section .input-box {
     color: #6aadff;
     outline-width: 0;
     font-size: .12rem;
+}
+.input-box .filter-btn:focus {
+    outline: 1px solid #6aadff;
 }
 
 .address-list {

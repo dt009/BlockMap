@@ -21,6 +21,11 @@
     -->
     <title>React App</title>
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script>
+        function googleMapError() {
+            window.document.write(`<p>地图加载失败, 请重新请求</p><button onclick="window.location.reload()">重新请求</button>`)
+        }
+    </script>
 </head>
 <body>
 <noscript>
@@ -38,6 +43,8 @@
   To create a production bundle, use `npm run build` or `yarn build`.
 -->
 <script
-        src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&v=1&key=AIzaSyBJhyACZCdjHSuobCJb8ISrRLWOyDwCCYk&v=1"></script>
+        src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&v=1&key=AIzaSyBJhyACZCdjHSuobCJb8ISrRLWOyDwCCYk&v=1"
+        onerror="googleMapError()"
+></script>
 </body>
 </html>
